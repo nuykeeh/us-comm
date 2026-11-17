@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b0c0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="U.S. 통신기">
+<meta name="description" content="We, Our, Earth — U.S. 대원과 교신하는 무전기">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>U.S. 통신기</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="talk">
+<main class="radio">
+  <header class="top">
+    <span class="antenna" aria-hidden="true"></span>
+    <div class="brand"><b>U.S. COMM</b><small>UNIVERSE SALVAGERS</small></div>
+    <span class="link" id="link"><i></i><em id="linkText">연결 중</em></span>
+    <a class="gear" href="settings.html" aria-label="설정">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L14.9 3h-4l-.4 2.9a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.4 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.9h4l.4-2.9a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+    </a>
+  </header>
+
+  <section class="lcd" id="lcd">
+    <div class="lcd-row">
+      <span id="ch">CH --</span>
+      <span class="sig" id="sig" aria-label="보드 신호"><i></i><i></i><i></i><i></i></span>
+    </div>
+    <div class="lcd-name"><span id="name">- - - -</span><small id="full"></small></div>
+    <div class="lcd-status"><span class="dot" id="dot"></span><span id="status">중계 서버에 연결하는 중…</span><span class="timer" id="timer"></span></div>
+    <div class="lcd-text" id="text"></div>
+    <div class="meter" id="meter" aria-hidden="true"></div>
+  </section>
+
+  <section class="ptt-wrap">
+    <button class="ptt" id="ptt" disabled aria-label="누르고 말하기">
+      <span class="ptt-waves" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="ptt-face">
+        <span class="ptt-label">PUSH<br>TO TALK</span>
+        <span class="ptt-sub" id="pttSub">누른 채로 말하기</span>
+      </span>
+    </button>
+  </section>
+
+  <div class="grille" aria-hidden="true"></div>
+  <p class="hint" id="hint"></p>
+
+  <details class="logbox" id="logbox">
+    <summary>교신 기록</summary>
+    <div class="log" id="log"></div>
+  </details>
+</main>
+<script src="config.js"></script>
+<script src="mqtt-lite.js"></script>
+<script src="app.js"></script>
+<script src="talk.js"></script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+/* style.css — U.S. 통신기 (무전기 · 설정 공통) */
+:root {
+  --accent: #ff8ccf;            /* 캐릭터 색 (app.js 가 바꾼다) */
+  --char-bg: #372b2e;
+  --glow: rgba(255, 140, 207, .55);
+  --body: #15171b;
+  --body-hi: #22252b;
+  --ink: #e9ebee;
+  --dim: #8a9099;
+  --faint: #4c525b;
+  --lcd: #0a110d;
+  --lcd-ink: #a6f0c7;
+  --lcd-dim: #4d7a62;
+  --tx: #ff5148;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background:
+    radial-gradient(120% 60% at 50% -10%, color-mix(in srgb, var(--char-bg) 85%, #000) 0%, transparent 70%),
+    #0b0c0f;
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .6s;
+}
+body.talk { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overscroll-behavior: none; }
+a { color: inherit; }
+
+/* ---------------------------------------------------------------- 무전기 몸통 */
+.radio {
+  position: relative;
+  max-width: 440px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: calc(var(--safe-t) + 14px) 18px calc(var(--safe-b) + 18px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.top { display: flex; align-items: center; gap: 12px; padding: 2px 2px 0; }
+.antenna {
+  width: 12px; height: 34px; border-radius: 6px 6px 3px 3px; flex: 0 0 auto;
+  background: linear-gradient(90deg, #0d0e11, #2b2e35 45%, #111317);
+  box-shadow: inset 0 -4px 0 rgba(255, 255, 255, .04);
+}
+.brand { display: flex; flex-direction: column; line-height: 1.05; }
+.brand b { font-size: 15px; letter-spacing: .22em; font-weight: 800; }
+.brand small { font-size: 9px; letter-spacing: .32em; color: var(--dim); margin-top: 3px; }
+.link { margin-left: auto; display: flex; align-items: center; gap: 7px; font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--dim); letter-spacing: .12em; }
+.link i { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+.link.ok i { background: #49d98d; box-shadow: 0 0 10px #49d98d; }
+.link.bad i { background: #e2a03a; animation: blink 1.2s infinite; }
+.gear { color: var(--dim); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--body); box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+.gear:active { transform: scale(.95); }
+
+/* ---------------------------------------------------------------- LCD */
+.lcd {
+  position: relative;
+  border-radius: 20px;
+  padding: 14px 16px 14px;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px),
+    radial-gradient(140% 120% at 30% 0%, #10201a 0%, var(--lcd) 60%);
+  border: 1px solid #1b2b23;
+  box-shadow: inset 0 0 30px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.04), 0 1px 0 rgba(255,255,255,.04);
+  color: var(--lcd-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow: hidden;
+}
+.lcd::after {                       /* 유리 반사 */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(160deg, rgba(255,255,255,.06) 0%, transparent 38%);
+}
+.lcd-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; letter-spacing: .14em; color: var(--lcd-dim); }
+.sig { display: flex; align-items: flex-end; gap: 3px; height: 14px; }
+.sig i { width: 4px; border-radius: 1px; background: #1f3329; }
+.sig i:nth-child(1) { height: 4px; } .sig i:nth-child(2) { height: 7px; } .sig i:nth-child(3) { height: 10px; } .sig i:nth-child(4) { height: 14px; }
+.sig i.on { background: var(--lcd-ink); box-shadow: 0 0 6px rgba(166,240,199,.5); }
+.lcd-name { display: flex; align-items: baseline; gap: 10px; margin: 10px 0 6px; }
+.lcd-name span {
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, sans-serif;
+  font-size: 38px; font-weight: 800; letter-spacing: -.01em; color: var(--accent);
+  text-shadow: 0 0 18px var(--glow); transition: color .5s, text-shadow .5s;
+}
+.lcd-name small { font-size: 12px; color: var(--lcd-dim); letter-spacing: .04em; font-family: -apple-system, system-ui, sans-serif; }
+.lcd-status { display: flex; align-items: center; gap: 8px; font-size: 14px; min-height: 20px; }
+.lcd-status .timer { margin-left: auto; color: var(--lcd-dim); font-variant-numeric: tabular-nums; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #29473a; flex: 0 0 auto; }
+.dot.ok { background: var(--lcd-ink); }
+.dot.tx { background: var(--tx); box-shadow: 0 0 10px var(--tx); animation: blink .6s infinite; }
+.dot.rx { background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: blink .9s infinite; }
+.lcd-text {
+  margin-top: 10px; min-height: 66px; max-height: 66px; overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, sans-serif;
+  font-size: 15.5px; line-height: 22px; color: #dff7ea;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+}
+.lcd-text.mine { color: var(--lcd-dim); }
+.meter { display: flex; gap: 3px; height: 10px; margin-top: 12px; }
+.meter i { flex: 1; border-radius: 2px; background: #15241c; transition: background .08s; }
+.meter i.on { background: var(--lcd-ink); }
+body.tx .meter i.on { background: var(--tx); }
+body.rx .meter i.on { background: var(--accent); }
+
+/* ---------------------------------------------------------------- 누르고 말하기 */
+.ptt-wrap { flex: 1; display: grid; place-items: center; min-height: 280px; }
+.ptt {
+  position: relative; width: min(66vw, 264px); aspect-ratio: 1; border-radius: 50%; border: 0; padding: 0;
+  background: radial-gradient(circle at 50% 28%, #30343c 0%, #1a1c21 58%, #0e0f12 100%);
+  box-shadow:
+    0 22px 46px rgba(0,0,0,.65),
+    inset 0 2px 1px rgba(255,255,255,.09),
+    inset 0 -10px 22px rgba(0,0,0,.55),
+    0 0 0 10px #14161a,
+    0 0 0 12px #25282f,
+    0 0 0 13px rgba(255,255,255,.03);
+  color: #dfe2e7; cursor: pointer; touch-action: none;
+  transition: transform .09s ease, box-shadow .25s ease, opacity .3s;
+}
+.ptt::before {                        /* 캐릭터 색 고리 */
+  content: ""; position: absolute; inset: 16px; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 18%, transparent), inset 0 0 22px color-mix(in srgb, var(--accent) 12%, transparent);
+  transition: border-color .3s, box-shadow .3s;
+}
+.ptt-face { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.ptt-label { font-size: 23px; line-height: 1.05; font-weight: 800; letter-spacing: .16em; }
+.ptt-sub { font-size: 13px; color: var(--dim); letter-spacing: .02em; }
+.ptt:disabled { opacity: .38; cursor: default; }
+.ptt.on {
+  transform: scale(.965);
+  background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent) 80%, #fff) 0%, color-mix(in srgb, var(--accent) 55%, #000) 55%, #120a0e 100%);
+  box-shadow: 0 10px 30px rgba(0,0,0,.6), inset 0 6px 18px rgba(0,0,0,.35), 0 0 0 10px #14161a, 0 0 0 12px var(--accent), 0 0 60px var(--glow);
+  color: #fff;
+}
+.ptt.on::before { border-color: rgba(255,255,255,.65); }
+.ptt.on .ptt-sub { color: rgba(255,255,255,.85); }
+.ptt-waves { position: absolute; inset: 0; pointer-events: none; }
+.ptt-waves i { position: absolute; inset: -12px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0; }
+.ptt.on .ptt-waves i { animation: wave 1.6s ease-out infinite; }
+.ptt.on .ptt-waves i:nth-child(2) { animation-delay: .53s; }
+.ptt.on .ptt-waves i:nth-child(3) { animation-delay: 1.06s; }
+body.rx .ptt:disabled::before { border-color: var(--accent); animation: pulse 1.4s ease-in-out infinite; }
+
+.grille {
+  height: 42px; border-radius: 16px; margin: 0 6px;
+  background-color: #111316;
+  background-image: radial-gradient(circle, #050608 1.6px, transparent 2.2px);
+  background-size: 9px 9px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.04);
+}
+.hint { margin: -4px 0 0; text-align: center; font-size: 12px; color: var(--faint); min-height: 16px; }
+
+/* ---------------------------------------------------------------- 교신 기록 */
+.logbox { background: var(--body); border-radius: 16px; padding: 4px 14px; box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
+.logbox summary { list-style: none; cursor: pointer; padding: 10px 0; font-size: 13px; color: var(--dim); letter-spacing: .04em; }
+.logbox summary::-webkit-details-marker { display: none; }
+.logbox summary::after { content: "＋"; float: right; color: var(--faint); }
+.logbox[open] summary::after { content: "－"; }
+.log { max-height: 34vh; overflow-y: auto; padding-bottom: 10px; -webkit-user-select: text; user-select: text; }
+.log:empty::before { content: "아직 교신이 없어요"; color: var(--faint); font-size: 13px; }
+.log p { margin: 8px 0; font-size: 14.5px; line-height: 1.5; }
+.log p b { display: inline-block; min-width: 36px; margin-right: 8px; font-weight: 700; }
+.log .me { color: var(--dim); } .log .me b { color: var(--faint); }
+.log .ai b { color: var(--accent); }
+.log .err { color: #ff8f8f; font-size: 13px; }
+.log .sys { color: var(--faint); font-size: 13px; }
+
+/* ---------------------------------------------------------------- 설정 */
+.settings .top { margin-bottom: 4px; }
+.back { display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px 0 10px; border-radius: 12px; background: var(--body); color: var(--ink); text-decoration: none; font-size: 14px; }
+.panel { background: var(--body); border-radius: 18px; padding: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
+.panel h2 { margin: 0 0 4px; font-size: 13px; letter-spacing: .08em; color: var(--dim); font-weight: 700; }
+.panel p.note { margin: 6px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--faint); }
+.row { display: flex; gap: 8px; margin-top: 12px; }
+.row > * { flex: 1; }
+.btn {
+  appearance: none; border: 1px solid #2a2e35; background: #1c1f24; color: var(--ink);
+  border-radius: 12px; padding: 12px 8px; font-family: inherit; font-weight: 600; font-size: 14px; line-height: 1.2; cursor: pointer;
+}
+.btn:active { transform: scale(.97); }
+.btn.sel { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.btn small { display: block; font-size: 11px; font-weight: 500; color: var(--faint); margin-top: 3px; }
+.btn.danger { color: #ff9a9a; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.slider { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+.slider input { flex: 1; accent-color: var(--accent); height: 28px; }
+.slider output { width: 54px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); font-size: 15px; }
+.slider .btn { flex: 0 0 48px; padding: 10px 0; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin-top: 10px; font-size: 13.5px; }
+.kv dt { color: var(--faint); } .kv dd { margin: 0; color: var(--ink); word-break: break-all; }
+.devs { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.dev { display: flex; align-items: center; gap: 10px; text-align: left; }
+.dev .dot { margin-left: 2px; }
+.dev.sel .dot { background: #49d98d; }
+.foot { text-align: center; font-size: 11.5px; color: var(--faint); line-height: 1.6; padding: 4px 0 8px; }
+
+@keyframes blink { 50% { opacity: .35; } }
+@keyframes wave { 0% { transform: scale(.92); opacity: .55; } 100% { transform: scale(1.32); opacity: 0; } }
+@keyframes pulse { 50% { opacity: .35; } }
+@media (min-width: 600px) { .radio { padding-top: 28px; } }
+@media (prefers-reduced-motion: reduce) { .ptt.on .ptt-waves i { animation: none; } }
